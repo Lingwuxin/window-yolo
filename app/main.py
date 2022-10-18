@@ -8,7 +8,7 @@ from PyQt5 import QtCore, QtGui
 from PyQt5.QtGui import QPixmap, QImage
 from numpy import ndarray
 from UI.Ui_main import Ui_MainWindow
-from YOLOv5.garbage_detect import RunthreadSatrtDetect
+from YOLOv5.window_detect import RunthreadSatrtDetect
 import time
 import cv2
 
