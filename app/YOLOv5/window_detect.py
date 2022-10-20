@@ -52,16 +52,20 @@ from utils.torch_utils import select_device, smart_inference_mode
 class RunthreadSatrtDetect(QtCore.QThread):
     detect_is_complete = QtCore.pyqtSignal(bool)
     detect_img=QtCore.pyqtSignal(ndarray)
-    msg = QtCore.pyqtSignal(str)
+    msg = QtCore.pyqtSignal(list)
+    label=QtCore.pyqtSignal(list)
     run_thread=None
     im0=None
-    xywh_msg=None
+    xywh_msg=[]
+    label_msg=[]
     run_thread_statue=False
+    weight_file=None
+    
     def __init__(self):
         super(RunthreadSatrtDetect, self).__init__()
     @smart_inference_mode()
     def run(self,
-            weights=ROOT / 'weights/Dhaka_AI_Yolov5s_With_BS_16.pt',  # model.pt path(s)
+            weights=ROOT / 'weights/yolov5s.pt',  # model.pt path(s)
             source='0',  # file/dir/URL/glob, 0 for webcam
             data=ROOT / 'data/coco128.yaml',  # dataset.yaml path
             imgsz=(640, 640),  # inference size (height, width)
@@ -89,7 +93,8 @@ class RunthreadSatrtDetect(QtCore.QThread):
             dnn=False,  # use OpenCV DNN for ONNX inference
             vid_stride=1,  # video frame-rate stride
     ):
-        
+        if self.weight_file!=None:
+            weights=ROOT / 'weights/'/self.weight_file
         source = str(source)
         save_img = not nosave and not source.endswith('.txt')  # save inference images
         is_file = Path(source).suffix[1:] in (IMG_FORMATS + VID_FORMATS)
@@ -178,14 +183,15 @@ class RunthreadSatrtDetect(QtCore.QThread):
                             annotator.box_label(xyxy, label, color=colors(c, True))
                         if save_crop:
                             save_one_box(xyxy, imc, file=save_dir / 'crops' / names[c] / f'{p.stem}.jpg', BGR=True)
-                        self.xywh_msg=f'准确率：{conf.item()},类别：{cls.item()},位置：{(xyxy2xywh(torch.tensor(xyxy).view(1, 4)) / gn).view(-1).tolist()}'
+                        self.xywh_msg.append(f'准确率：{conf.item()},类别：{cls.item()},位置：{(xyxy2xywh(torch.tensor(xyxy).view(1, 4)) / gn).view(-1).tolist()}')
+                        self.label_msg.append(label)
                 # Stream results
+                self.get_xyxy_msg()
+                self.get_label()
                 self.im0 = annotator.result()
                 self.detect_is_complete.emit(True)
-                self.get_xyxy_msg()
                 self.detect_img.emit(self.getimg())
                 if self.run_thread_statue==False:
-
                     dataset.close_cap=True
                     dataset.threads[0]
                     return
@@ -201,7 +207,12 @@ class RunthreadSatrtDetect(QtCore.QThread):
     def get_xyxy_msg(self):
         if self.xywh_msg != None:
             self.msg.emit(self.xywh_msg)
-            self.xywh_msg=None
+            self.xywh_msg=[]
+    def get_label(self):
+        if self.label_msg!=None:
+            self.label.emit(self.label_msg)
+            # print(1)
+            self.label_msg=[]
 
     # def start(self):
     #     opt = self.parse_opt()
