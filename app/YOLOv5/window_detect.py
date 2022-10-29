@@ -185,8 +185,8 @@ class RunthreadSatrtDetect(QtCore.QThread):
                             save_one_box(xyxy, imc, file=save_dir / 'crops' / names[c] / f'{p.stem}.jpg', BGR=True)
                         self.xywh_msg.append(f'准确率：{conf.item()},类别：{cls.item()},位置：{(xyxy2xywh(torch.tensor(xyxy).view(1, 4)) / gn).view(-1).tolist()}')
                         self.label_msg.append(label)
+                        self.get_xyxy_msg()
                 # Stream results
-                self.get_xyxy_msg()
                 self.get_label()
                 self.im0 = annotator.result()
                 self.detect_is_complete.emit(True)
