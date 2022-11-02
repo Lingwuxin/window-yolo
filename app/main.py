@@ -1,6 +1,4 @@
-from re import S
 import sys
-import os
 from typing import List, Tuple
 from PyQt5.QtMultimedia import *
 from PyQt5.QtWidgets import *
