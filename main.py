@@ -1,5 +1,6 @@
 import sys
 from typing import List, Tuple
+import os
 from PyQt5.QtMultimedia import *
 from PyQt5.QtWidgets import *
 from PyQt5 import QtCore, QtGui
@@ -38,7 +39,7 @@ class MainApp(QMainWindow):
         self.main_ui.pushButton_statr_detect.setText("退出推理")
 
     def setCombox_select(self):
-        for root, dirs, files in os.walk("app/YOLOv5/weights/"):
+        for root, dirs, files in os.walk("YOLOv5/weights/"):
             if len(files)==0:
                 self.main_ui.combox_select_weights.addItem("--未找到模型权重--")
                 break        
