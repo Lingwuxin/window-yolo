@@ -4,7 +4,6 @@ import xml.etree.cElementTree as ET
 import os, sys
 import glob
 
-from numpy import save
 class Data():
     def __init__(self) -> None:
         self.high=None
