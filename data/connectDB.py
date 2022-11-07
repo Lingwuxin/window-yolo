@@ -1,17 +1,19 @@
-from pymysql import cursors
 from decoratorDB import getCursor
 
 
 @getCursor
-def saveSite(cursor: cursors.Cursor):
-    pass
+def saveSite(*args, **kwargs):
+    if "connect" not in kwargs:
+        print("数据库连接异常")
 
 
 @getCursor
-def selectSite(cursor: cursors.Cursor):
-    pass
+def selectSite(*args, **kwargs):
+    if "connect" not in kwargs:
+        print("数据库连接异常")
 
 
 @getCursor
-def selectObject(cursor: cursors.Cursor):
-    pass
+def selectObject(*args, **kwargs):
+    if "connect" not in kwargs:
+        print("数据库连接异常")
