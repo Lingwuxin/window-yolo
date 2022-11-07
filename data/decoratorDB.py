@@ -1,15 +1,14 @@
-import pymysql
-from pymysql import cursors
+import mysql.connector
 
-mysql_user = {"host": "127.0.0.1", "user": "yolo_garbage_window", "password": "123456"}
-
+mysql_user = {"host": "127.0.0.1", "user": "yolo_user", "password": "yologarbage33214","database":"YOLO"}
 
 def connectDB(useConnectionFunc):
-    def connection(*args, **kwargs) -> pymysql.connections.Connection:
-        connect = pymysql.connect(
+    def connection(*args, **kwargs) -> mysql.connector:
+        connect = mysql.connector.connect(
             host=mysql_user["host"],
             user=mysql_user["user"],
             password=mysql_user["password"],
+            database=mysql_user
         )
         useConnectionFunc(connect)
         connect.close()
@@ -17,14 +16,15 @@ def connectDB(useConnectionFunc):
     return connection
 
 
-def getCursor(useCursorFunc) -> cursors.Cursor:
+def getCursor(useCursorFunc) :
     def newCursor(*args,**kwargs):
-        connect = pymysql.connect(
+        connect = mysql.connector.connect(
             host=mysql_user["host"],
             user=mysql_user["user"],
             password=mysql_user["password"],
         )
-        useCursorFunc(connect.cursor())
+        kwargs['cursor']=connect.cursor()
+        useCursorFunc(*args,**kwargs)
         connect.close()
     return newCursor
 
