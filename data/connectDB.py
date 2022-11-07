@@ -1,19 +1,16 @@
-from decoratorDB import getCursor
+from decoratorDB import connectDB
 
 
-@getCursor
-def saveSite(*args, **kwargs):
-    if "connect" not in kwargs:
-        print("数据库连接异常")
+@connectDB
+def saveSite(connect,cursor):
+    pass
 
 
-@getCursor
-def selectSite(*args, **kwargs):
-    if "connect" not in kwargs:
-        print("数据库连接异常")
+@connectDB
+def selectSite(connect,cursor):
+    pass
 
-
-@getCursor
-def selectObject(*args, **kwargs):
-    if "connect" not in kwargs:
-        print("数据库连接异常")
+@connectDB
+def selectObject(connect,cursor):
+    pass
+saveSite()

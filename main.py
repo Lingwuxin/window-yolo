@@ -16,11 +16,12 @@ class MainApp(QMainWindow):
         super(QMainWindow, self).__init__()
         self.start_detect_thread = None
         # app_window = QtWidgets.QMainWindow()
-        self.main_ui=Ui_MainWindow()
+        self.main_ui = Ui_MainWindow()
         self.main_ui.setupUi(self)
         self.setWindowTitle("YOLO可视化窗口")
         self.main_ui.pushButton_statr_detect.clicked.connect(self.startDetect)
         self.setCombox_select()
+
     # 在子线程中启动推理模型
     def startDetect(self):
         self.main_ui.label_player.setText("加载中")
@@ -29,9 +30,11 @@ class MainApp(QMainWindow):
             self.start_detect_thread.detect_img.connect(self.show_label_img)
             self.start_detect_thread.msg.connect(self.setTextEdit)
             self.start_detect_thread.label.connect(self.setDetectLabels)
-            
+
         self.start_detect_thread.run_thread_statue = True
-        self.start_detect_thread.weight_file=self.main_ui.combox_select_weights.currentText()
+        self.start_detect_thread.weight_file = (
+            self.main_ui.combox_select_weights.currentText()
+        )
         self.start_detect_thread.start()
         self.main_ui.pushButton_statr_detect.clicked.connect(self.exitDetect)
         self.main_ui.pushButton_statr_detect.clicked.disconnect(self.startDetect)
@@ -40,9 +43,9 @@ class MainApp(QMainWindow):
 
     def setCombox_select(self):
         for root, dirs, files in os.walk("YOLOv5/weights/"):
-            if len(files)==0:
+            if len(files) == 0:
                 self.main_ui.combox_select_weights.addItem("--未找到模型权重--")
-                break        
+                break
             self.main_ui.combox_select_weights.addItems(files)
 
     def exitDetect(self):
@@ -76,8 +79,10 @@ class MainApp(QMainWindow):
             QtGui.QImage.Format_RGB888,
         )
         self.main_ui.label_player.setPixmap(QPixmap.fromImage(img))
-    def setDetectLabels(self,labels:List[str]):
+
+    def setDetectLabels(self, labels: List[str]):
         self.main_ui.label_detect_labels.setText(",".join(labels))
+
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)

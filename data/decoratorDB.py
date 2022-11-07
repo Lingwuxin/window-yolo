@@ -10,7 +10,8 @@ mysql_user = {
 
 def connectDB(useConnectionFunc):
     def connection(*args, **kwargs):
-        connect: mysql.connector.connection_cext.CMySQLConnection = (
+        try:
+            connect: mysql.connector.connection_cext.CMySQLConnection = (
                 mysql.connector.connect(
                     host=mysql_user["host"],
                     user=mysql_user["user"],
@@ -18,25 +19,12 @@ def connectDB(useConnectionFunc):
                     auth_plugin="mysql_native_password",
                 )
             )
-        kwargs["connect"] = connect
-        useConnectionFunc(*args, **kwargs)
-        connect.close()
+            kwargs["connect"] = connect
+            kwargs["cursor"] = connect.cursor()
+            useConnectionFunc(*args, **kwargs)
+        except Exception as e:
+            print(e)
+        finally:
+            connect.close()
 
     return connection
-
-
-def getCursor(useCursorFunc):
-    def newCursor(*args, **kwargs):
-        connect: mysql.connector.connection_cext.CMySQLConnection = (
-                mysql.connector.connect(
-                    host=mysql_user["host"],
-                    user=mysql_user["user"],
-                    password=mysql_user["password"],
-                    auth_plugin="mysql_native_password",
-                )
-            )
-        kwargs["cursor"] = connect.cursor()
-        useCursorFunc(*args, **kwargs)
-        connect.close()
-
-    return newCursor
