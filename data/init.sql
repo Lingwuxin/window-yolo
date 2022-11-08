@@ -4,6 +4,7 @@ use YOLO;
 CREATE TABLE yoloGarbage (
 num int primary key,
 garbage varchar(255),
+accuracy decimal(20,18),
 xywh_x decimal(20,18),
 xywh_y decimal(20,18),
 xywh_w decimal(20,18),
