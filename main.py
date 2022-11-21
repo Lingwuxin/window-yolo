@@ -24,10 +24,10 @@ class MainApp(QMainWindow):
     def ready_model(self):
         self.main_ui.pushButton_statr_detect.clicked.connect(self.startDetect)
         self.setCombox_select()
-        self._thread_ = QtCore.QThread()
+        self.detect_thread = QtCore.QThread()
         self.start_detect_thread = RunDetect()
-        self._thread_.started.connect(self.start_detect_thread.run)
-        self.start_detect_thread.moveToThread(self._thread_)
+        self.detect_thread.started.connect(self.start_detect_thread.run)
+        self.start_detect_thread.moveToThread(self.detect_thread)
         self.start_detect_thread.detect_img.connect(self.show_label_img)
         self.start_detect_thread.msg.connect(self.setTextEdit)
         self.start_detect_thread.label.connect(self.setDetectLabels)
@@ -38,7 +38,7 @@ class MainApp(QMainWindow):
         self.start_detect_thread.weight_file = (
             self.main_ui.combox_select_weights.currentText()  # 选中模型
         )
-        self._thread_.start()
+        self.detect_thread.start()
         self.main_ui.pushButton_statr_detect.clicked.disconnect(self.startDetect)
         self.main_ui.pushButton_statr_detect.clicked.connect(self.exitDetect)
         self.main_ui.textEdit_res_msg.setText("加载模型中")
@@ -54,8 +54,8 @@ class MainApp(QMainWindow):
 
     def exitDetect(self):
         self.start_detect_thread.run_thread_statue = False
-        self._thread_.quit()
-        self._thread_.wait()
+        self.detect_thread.quit()
+        self.detect_thread.wait()
         self.main_ui.pushButton_statr_detect.setText("启动推理")
         self.main_ui.pushButton_statr_detect.clicked.connect(self.startDetect)
         self.main_ui.pushButton_statr_detect.clicked.disconnect(self.exitDetect)
