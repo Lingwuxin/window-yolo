@@ -7,40 +7,44 @@ from PyQt5 import QtCore, QtGui
 from PyQt5.QtGui import QPixmap, QImage
 from numpy import ndarray
 from UI.Ui_main import Ui_MainWindow
-from YOLOv5.window_detect import RunthreadSatrtDetect
+from YOLOv5.window_detect import RunDetect
 import cv2
+import time
 
 
 class MainApp(QMainWindow):
     def __init__(self):
         super(QMainWindow, self).__init__()
-        self.start_detect_thread = None
         # app_window = QtWidgets.QMainWindow()
         self.main_ui = Ui_MainWindow()
         self.main_ui.setupUi(self)
         self.setWindowTitle("YOLO可视化窗口")
+        self.ready_model()
+
+    def ready_model(self):
         self.main_ui.pushButton_statr_detect.clicked.connect(self.startDetect)
         self.setCombox_select()
+        self._thread_ = QtCore.QThread()
+        self.start_detect_thread = RunDetect()
+        self._thread_.started.connect(self.start_detect_thread.run)
+        self.start_detect_thread.moveToThread(self._thread_)
+        self.start_detect_thread.detect_img.connect(self.show_label_img)
+        self.start_detect_thread.msg.connect(self.setTextEdit)
+        self.start_detect_thread.label.connect(self.setDetectLabels)
 
-    # 在子线程中启动推理模型
     def startDetect(self):
         self.main_ui.label_player.setText("加载中")
-        if self.start_detect_thread == None:
-            self.start_detect_thread = RunthreadSatrtDetect()
-            self.start_detect_thread.detect_img.connect(self.show_label_img)
-            self.start_detect_thread.msg.connect(self.setTextEdit)
-            self.start_detect_thread.label.connect(self.setDetectLabels)
-
         self.start_detect_thread.run_thread_statue = True
         self.start_detect_thread.weight_file = (
-            self.main_ui.combox_select_weights.currentText()
+            self.main_ui.combox_select_weights.currentText()  # 选中模型
         )
-        self.start_detect_thread.start()
-        self.main_ui.pushButton_statr_detect.clicked.connect(self.exitDetect)
+        self._thread_.start()
         self.main_ui.pushButton_statr_detect.clicked.disconnect(self.startDetect)
+        self.main_ui.pushButton_statr_detect.clicked.connect(self.exitDetect)
         self.main_ui.textEdit_res_msg.setText("加载模型中")
         self.main_ui.pushButton_statr_detect.setText("退出推理")
 
+    # 读取模型权重文件名
     def setCombox_select(self):
         for root, dirs, files in os.walk("YOLOv5/weights/"):
             if len(files) == 0:
@@ -50,9 +54,8 @@ class MainApp(QMainWindow):
 
     def exitDetect(self):
         self.start_detect_thread.run_thread_statue = False
-        self.start_detect_thread.quit()
-        self.start_detect_thread.wait()
-        self.start_detect_thread = None
+        self._thread_.quit()
+        self._thread_.wait()
         self.main_ui.pushButton_statr_detect.setText("启动推理")
         self.main_ui.pushButton_statr_detect.clicked.connect(self.startDetect)
         self.main_ui.pushButton_statr_detect.clicked.disconnect(self.exitDetect)

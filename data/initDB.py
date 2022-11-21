@@ -31,4 +31,9 @@ class DtabaseInit:
                 print("数据库初始化失败")
 
 
-a = DtabaseInit()
+def main():
+    database_init = DtabaseInit()
+
+
+if __name__ == "__main__":
+    main()

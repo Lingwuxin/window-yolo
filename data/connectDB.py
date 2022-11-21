@@ -1,16 +1,11 @@
 from decoratorDB import connectDB
-
+from PyQt5 import QtCore
 
 @connectDB
-def saveSite(connect,cursor):
-    pass
+def saveSite(connect,cursor,data=None):
+    print(data)
 
 
 @connectDB
 def selectSite(connect,cursor):
     pass
-
-@connectDB
-def selectObject(connect,cursor):
-    pass
-saveSite()

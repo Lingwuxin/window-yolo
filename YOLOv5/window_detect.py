@@ -33,7 +33,6 @@ from pathlib import Path
 from threading import Thread
 import time
 from numpy import ndarray
-
 import torch
 
 FILE = Path(__file__).resolve()
@@ -49,7 +48,8 @@ from utils.general import (LOGGER, Profile, check_file, check_img_size, check_im
 from utils.plots import Annotator, colors, save_one_box
 from utils.torch_utils import select_device, smart_inference_mode
 
-class RunthreadSatrtDetect(QtCore.QThread):
+class RunDetect(QtCore.QObject):
+    det_data=QtCore.pyqtSignal(torch.Tensor)
     detect_is_complete = QtCore.pyqtSignal(bool)
     detect_img=QtCore.pyqtSignal(ndarray)
     msg = QtCore.pyqtSignal(list)
@@ -62,7 +62,7 @@ class RunthreadSatrtDetect(QtCore.QThread):
     weight_file=None
     
     def __init__(self):
-        super(RunthreadSatrtDetect, self).__init__()
+        super(RunDetect, self).__init__()
     @smart_inference_mode()
     def run(self,
             weights=ROOT / 'weights/yolov5s.pt',  # model.pt path(s)
@@ -186,6 +186,7 @@ class RunthreadSatrtDetect(QtCore.QThread):
                         self.xywh_msg.append(f'准确率：{conf.item()},类别：{cls.item()},位置：{(xyxy2xywh(torch.tensor(xyxy).view(1, 4)) / gn).view(-1).tolist()}')
                         self.label_msg.append(label)
                         self.get_xyxy_msg()
+                    self.det_data.emit(det)
                 # Stream results
                 self.get_label()
                 self.im0 = annotator.result()
