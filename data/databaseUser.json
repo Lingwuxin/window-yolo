@@ -1,0 +1,13 @@
+{
+    "root": {
+        "name": "root",
+        "password": "123456",
+        "host": "127.0.0.1"
+    },
+    "user": {
+        "name": "yolo_user",
+        "password": "yologarbage33214",
+        "host": "%",
+        "database": "YOLO"
+    }
+}

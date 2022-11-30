@@ -23,19 +23,22 @@ class MainApp(QMainWindow):
 
     def ready_model(self):
         self.main_ui.pushButton_statr_detect.clicked.connect(self.startDetect)
-        self.setCombox_select()
-        self.detect_thread = QtCore.QThread()
-        self.start_detect_thread = RunDetect()
-        self.detect_thread.started.connect(self.start_detect_thread.run)
-        self.start_detect_thread.moveToThread(self.detect_thread)
-        self.start_detect_thread.detect_img.connect(self.show_label_img)
-        self.start_detect_thread.msg.connect(self.setTextEdit)
-        self.start_detect_thread.label.connect(self.setDetectLabels)
+        self.setCombox_select()  # 加载模型列表
+        self.detect_thread = QtCore.QThread()  # 初始化一个QT线程管理器
+        self.start_detect = RunDetect()  # 初始化模型推理对象
+
+        # 为self.detect_thread.start()信号绑定槽函数
+        self.detect_thread.started.connect(self.start_detect.run)
+        self.start_detect.moveToThread(self.detect_thread)# 将模型推理对象挂载到QT线程管理器上
+        # 处理推理过程中发出的信号并绑定槽函数
+        self.start_detect.detect_img.connect(self.show_label_img)
+        self.start_detect.msg.connect(self.setTextEdit)
+        self.start_detect.label.connect(self.setDetectLabels)
 
     def startDetect(self):
         self.main_ui.label_player.setText("加载中")
-        self.start_detect_thread.run_thread_statue = True
-        self.start_detect_thread.weight_file = (
+        self.start_detect.run_thread_statue = True
+        self.start_detect.weight_file = (
             self.main_ui.combox_select_weights.currentText()  # 选中模型
         )
         self.detect_thread.start()
@@ -53,7 +56,7 @@ class MainApp(QMainWindow):
             self.main_ui.combox_select_weights.addItems(files)
 
     def exitDetect(self):
-        self.start_detect_thread.run_thread_statue = False
+        self.start_detect.run_thread_statue = False
         self.detect_thread.quit()
         self.detect_thread.wait()
         self.main_ui.pushButton_statr_detect.setText("启动推理")
