@@ -4,37 +4,41 @@ from django.shortcuts import render
 from django.conf import settings
 from django.core.handlers.wsgi import WSGIRequest
 import cv2
+import threading
+
 
 def index(request: WSGIRequest):
-    return render(request=request, template_name='detect/index.html')
+    return render(request=request, template_name="detect/index.html")
 
 
 def looking_one(request: WSGIRequest):
-    return render(request=request,template_name='detect/video.html')
+    return render(request=request, template_name="detect/video.html")
 
 
 def stream_video(request: WSGIRequest):
-    def gen_display(camera):
+    #连接断开后无法关闭子线程
+    import sys
+    sys.path.append("..")
+    from YOLOv5.django_detect import RunDetect
+    detect = RunDetect()
+    t = threading.Thread(target=detect.run)
+    t.start()
+    def gen_display(detect):
         """
         视频流生成器功能。
         """
+
+        # detect.run()
         while True:
-            # 读取图片
-            ret, frame = camera.read()
+            frame = detect.getimg()
+            ret, frame = cv2.imencode(".png", frame)
             if ret:
-                # 将图片进行解码
-                ret, frame = cv2.imencode('.jpeg', frame)
-                if ret:
-                    # 转换为byte类型的，存储在迭代器中
-                    yield (b'--frame\r\n'
-                        b'Content-Type: image/jpeg\r\n\r\n' + frame.tobytes() + b'\r\n')
+                # 转换为byte类型的，存储在迭代器中
+                yield (
+                    b"--frame\r\n"
+                    b"Content-Type: image/png\r\n\r\n" + frame.tobytes() + b"\r\n"
+                )
 
-
-    """
-    视频流路由。将其放入img标记的src属性中。
-    例如：<img src='https://ip:port/uri' >
-    """
-    # 视频流相机对象
-    camera = cv2.VideoCapture(0)
-    # 使用流传输传输视频流
-    return StreamingHttpResponse(gen_display(camera), content_type='multipart/x-mixed-replace; boundary=frame')
+    return StreamingHttpResponse(
+        gen_display(detect), content_type="multipart/x-mixed-replace; boundary=frame"
+    )
