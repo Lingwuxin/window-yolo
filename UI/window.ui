@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1322</width>
+    <height>795</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="widget">
+   <layout class="QHBoxLayout" name="horizontalLayout_2">
+    <item>
+     <layout class="QGridLayout" name="view_frame_gridLayout"/>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1322</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menu_file">
+    <property name="title">
+     <string>文件</string>
+    </property>
+    <addaction name="action_select_image"/>
+    <addaction name="action_select_video"/>
+   </widget>
+   <widget class="QMenu" name="menu_signal">
+    <property name="title">
+     <string>信号源</string>
+    </property>
+    <addaction name="action_internet"/>
+   </widget>
+   <addaction name="menu_file"/>
+   <addaction name="menu_signal"/>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <action name="action_select_image">
+   <property name="text">
+    <string>选择图片</string>
+   </property>
+  </action>
+  <action name="action_select_video">
+   <property name="text">
+    <string>选择视频</string>
+   </property>
+  </action>
+  <action name="action_internet">
+   <property name="text">
+    <string>配置网络信号源</string>
+   </property>
+  </action>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
