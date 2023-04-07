@@ -1,25 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>ViewForm</class>
- <widget class="QWidget" name="ViewForm">
+ <class>local_weight_ViewFrame</class>
+ <widget class="QFrame" name="local_weight_ViewFrame">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>911</width>
-    <height>637</height>
+    <width>600</width>
+    <height>596</height>
    </rect>
   </property>
-  <property name="windowTitle">
-   <string>Form</string>
+  <property name="maximumSize">
+   <size>
+    <width>600</width>
+    <height>600</height>
+   </size>
   </property>
-  <layout class="QGridLayout" name="gridLayout">
-   <item row="0" column="0">
+  <property name="windowTitle">
+   <string>Frame</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
     <widget class="QSplitter" name="splitter_2">
      <property name="orientation">
       <enum>Qt::Vertical</enum>
      </property>
-     <widget class="QLabel" name="label_detect_labels_3">
+     <widget class="QLabel" name="label_detect_labels">
       <property name="maximumSize">
        <size>
         <width>16777215</width>
@@ -30,7 +36,7 @@
        <string>检测目标</string>
       </property>
      </widget>
-     <widget class="QLabel" name="label_player_3">
+     <widget class="QLabel" name="label_player">
       <property name="styleSheet">
        <string notr="true">font: 36pt &quot;Agency FB&quot;;
 background-color:rgb(229, 229, 229);</string>
@@ -46,18 +52,24 @@ background-color:rgb(229, 229, 229);</string>
       <property name="orientation">
        <enum>Qt::Horizontal</enum>
       </property>
-      <widget class="QComboBox" name="combox_select_weights_3">
+      <widget class="QComboBox" name="combox_select_weights">
+       <property name="maximumSize">
+        <size>
+         <width>16777215</width>
+         <height>30</height>
+        </size>
+       </property>
        <property name="currentText">
         <string/>
        </property>
       </widget>
-      <widget class="QPushButton" name="pushButton_statr_detect_3">
+      <widget class="QPushButton" name="pushButton_statr_detect">
        <property name="text">
         <string>启动模型</string>
        </property>
       </widget>
      </widget>
-     <widget class="QLabel" name="label_res_msg_3">
+     <widget class="QLabel" name="label_res_msg">
       <property name="maximumSize">
        <size>
         <width>16777215</width>
@@ -68,7 +80,7 @@ background-color:rgb(229, 229, 229);</string>
        <string>信息栏</string>
       </property>
      </widget>
-     <widget class="QTextEdit" name="textEdit_res_msg_3">
+     <widget class="QTextEdit" name="textEdit_res_msg">
       <property name="maximumSize">
        <size>
         <width>16777215</width>
