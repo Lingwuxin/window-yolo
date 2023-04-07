@@ -1,0 +1,5 @@
+path: D:\Datasets\garbage\garbage
+train: images\train
+val: images\val
+nc: 4
+names: ['glass', 'metal', 'paper', 'plastic']

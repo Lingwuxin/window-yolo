@@ -1,0 +1,1 @@
+对YOLOv5原版的代码几乎没有改动，主要是对detect.py进行了封装，同时对utils/dataloaders.py中的LoadStreams类增添了一个属性用以控制摄像头的开关。

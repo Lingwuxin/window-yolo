@@ -1,0 +1,5 @@
+path: D:\Datasets\garbage
+train: one-garbage\images\train
+val: one-garbage\images\val
+nc: 1
+names: ['garbage']
